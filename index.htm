@@ -67,7 +67,7 @@
         </select>
         <button type="submit">Add Event</button>
     </form>
-    <button id="reset-button">Reset Scores</button>
+    <button id="reset-button">Reset Scores and Events</button>
     <div class="events" id="events"></div>
 
     <script>
@@ -105,7 +105,12 @@
             frankieScore = 0;
             localStorage.setItem('erinScore', erinScore);
             localStorage.setItem('frankieScore', frankieScore);
+            
+            events.length = 0; // Clear the events array
+            localStorage.setItem('events', JSON.stringify(events));
+            
             updateScoreboard();
+            updateEvents();
         });
 
         function updateScoreboard() {
