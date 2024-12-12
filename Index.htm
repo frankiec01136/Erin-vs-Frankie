@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erin vs Frankie Scoreboard</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background-color: #f4f4f4; 
+            margin: 0; 
+            padding: 0; 
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+        }
+        .scoreboard { 
+            font-size: 2em; 
+            margin: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        .scoreboard img {
+            width: 100px;  /* Increased size */
+            height: 100px; /* Increased size */
+            margin: 0 20px;
+        }
+        .events { 
+            margin-top: 20px; 
+        }
+        form {
+            margin: 20px 0;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 1em;
+        }
+        .event-item {
+            background: #fff;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Erin vs Frankie</h1>
+    </header>
+    <div class="scoreboard">
+        <img src="monkey.png" alt="Erin">
+        <span id="erin-score">0</span> - <span id="frankie-score">0</span>
+        <img src="mouse.png" alt="Frankie">
+    </div>
+    <form id="event-form">
+        <input type="text" id="event" placeholder="Event" required>
+        <select id="winner" required>
+            <option value="">Select Winner</option>
+            <option value="Erin">Erin</option>
+            <option value="Frankie">Frankie</option>
+        </select>
+        <button type="submit">Add Event</button>
+    </form>
+    <button id="reset-button">Reset Scores</button>
+    <div class="events" id="events"></div>
+
+    <script>
+        let erinScore = localStorage.getItem('erinScore') ? parseInt(localStorage.getItem('erinScore')) : 0;
+        let frankieScore = localStorage.getItem('frankieScore') ? parseInt(localStorage.getItem('frankieScore')) : 0;
+        const events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : [];
+
+        document.getElementById('erin-score').textContent = erinScore;
+        document.getElementById('frankie-score').textContent = frankieScore;
+        updateEvents();
+
+        document.getElementById('event-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const event = document.getElementById('event').value;
+            const winner = document.getElementById('winner').value;
+
+            if (winner === 'Erin') {
+                erinScore++;
+                localStorage.setItem('erinScore', erinScore);
+            } else if (winner === 'Frankie') {
+                frankieScore++;
+                localStorage.setItem('frankieScore', frankieScore);
+            }
+
+            events.push({ event, winner });
+            localStorage.setItem('events', JSON.stringify(events));
+            updateScoreboard();
+            updateEvents();
+
+            document.getElementById('event-form').reset();
+        });
+
+        document.getElementById('reset-button').addEventListener('click', function() {
+            erinScore = 0;
+            frankieScore = 0;
+            localStorage.setItem('erinScore', erinScore);
+            localStorage.setItem('frankieScore', frankieScore);
+            updateScoreboard();
+        });
+
+        function updateScoreboard() {
+            document.getElementById('erin-score').textContent = erinScore;
+            document.getElementById('frankie-score').textContent = frankieScore;
+        }
+
+        function updateEvents() {
+            const eventsDiv = document.getElementById('events');
+            eventsDiv.innerHTML = '';
+            events.forEach((e, index) => {
+                const eventDiv = document.createElement('div');
+                eventDiv.className = 'event-item';
+                eventDiv.textContent = `${index + 1}. ${e.event} - Winner: ${e.winner}`;
+                eventsDiv.appendChild(eventDiv);
+            });
+        }
+    </script>
+</body>
+</html>
