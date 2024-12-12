@@ -6,16 +6,18 @@
     <title>Erin vs Frankie Scoreboard</title>
     <style>
         body { 
-            font-family: Arial, sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             text-align: center; 
-            background-color: #f4f4f4; 
+            background: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%); 
             margin: 0; 
             padding: 0; 
+            overflow: hidden;
         }
         header {
             background-color: #333;
             color: #fff;
-            padding: 10px 0;
+            padding: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .scoreboard { 
             font-size: 2em; 
@@ -39,13 +41,39 @@
             padding: 10px;
             margin: 5px;
             font-size: 1em;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #ff7e5f;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        button:hover {
+            background-color: #feb47b;
+            transform: scale(1.05);
+        }
+        button:active {
+            transform: scale(0.95);
         }
         .event-item {
             background: #fff;
             margin: 10px;
             padding: 10px;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .cat {
+            position: absolute;
+            width: 100px; /* Increased size */
+            height: auto;
+            animation: moveCat 10s linear infinite;
+        }
+        @keyframes moveCat {
+            from { left: -100px; top: calc(100% - 100px); }
+            to { left: calc(100% + 100px); top: calc(100% - 100px); }
         }
     </style>
 </head>
@@ -70,6 +98,9 @@
     <button id="reset-button">Reset Scores and Events</button>
     <div class="events" id="events"></div>
 
+    <!-- Cat animation -->
+    <img src="Cat.png" alt="Cat" class="cat">
+
     <script>
         let erinScore = localStorage.getItem('erinScore') ? parseInt(localStorage.getItem('erinScore')) : 0;
         let frankieScore = localStorage.getItem('frankieScore') ? parseInt(localStorage.getItem('frankieScore')) : 0;
@@ -83,6 +114,9 @@
             e.preventDefault();
             const event = document.getElementById('event').value;
             const winner = document.getElementById('winner').value;
+            
+            // Get the current date and time
+            const eventTime = new Date().toLocaleString();
 
             if (winner === 'Erin') {
                 erinScore++;
@@ -92,7 +126,7 @@
                 localStorage.setItem('frankieScore', frankieScore);
             }
 
-            events.push({ event, winner });
+            events.push({ event, winner, eventTime });
             localStorage.setItem('events', JSON.stringify(events));
             updateScoreboard();
             updateEvents();
@@ -124,7 +158,7 @@
             events.forEach((e, index) => {
                 const eventDiv = document.createElement('div');
                 eventDiv.className = 'event-item';
-                eventDiv.textContent = `${index + 1}. ${e.event} - Winner: ${e.winner}`;
+                eventDiv.textContent = `${index + 1}. ${e.event} - Winner: ${e.winner} - Time: ${e.eventTime}`;
                 eventsDiv.appendChild(eventDiv);
             });
         }
