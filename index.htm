@@ -67,6 +67,7 @@
         </select>
         <button type="submit">Add Event</button>
     </form>
+    <button id="reset-button">Reset Scores</button>
     <div class="events" id="events"></div>
 
     <script>
@@ -97,6 +98,14 @@
             updateEvents();
 
             document.getElementById('event-form').reset();
+        });
+
+        document.getElementById('reset-button').addEventListener('click', function() {
+            erinScore = 0;
+            frankieScore = 0;
+            localStorage.setItem('erinScore', erinScore);
+            localStorage.setItem('frankieScore', frankieScore);
+            updateScoreboard();
         });
 
         function updateScoreboard() {
